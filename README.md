@@ -23,6 +23,11 @@ Server app runs on port 8270, client app server runs on port 8280.
 
 TBD
 
+
+[1]: https://github.com/thheller/shadow-cljs
+[2]: https://github.com/tonsky/rum
+[3]: http://koajs.com/
+
 Copyright © 2018 Josef Pospíšil
 
 Distributed under the Eclipse Public License either version 1.0 or (at your

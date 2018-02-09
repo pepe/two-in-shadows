@@ -11,5 +11,3 @@
   (rum/mount (greeting) (. js/document (getElementById "app"))))
 
 (mount-root)
-  
-
