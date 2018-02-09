@@ -1,5 +1,5 @@
 {
-  "name": "two-in-one",
+  "name": "two-in-shadows",
   "version": "1.0.0",
   "description": "Shadow cljs shared project",
   "main": "out/server.js",
