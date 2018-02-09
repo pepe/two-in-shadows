@@ -1,0 +1,22 @@
+;; shadow-cljs configuration
+{:source-paths ["src"]
+
+
+ :dependencies [[binaryage/devtools "0.9.8"]
+                [binaryage/dirac "1.2.29"]
+                [rum "0.11.0"]]
+
+
+ :builds {:server {:target    :node-script
+                   :main      two-in-shadows.server/main
+                   :output-to "out/server.js"}
+
+          :client {:target     :browser
+                   :modules    {:main {:entries [two-in-shadows.client]}}
+                   :output-dir "public/js"
+                   :asset-path "/js"
+                   :devtools   {:http-root  "public"
+                                :http-port  8280
+                                :after-load two-in-shadows.client/mount-root
+                                :preloads   [dirac.runtime.preload devtools.preload]}}}}
+

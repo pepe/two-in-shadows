@@ -1,0 +1,7 @@
+/node_modules/
+/out/
+/public/js/
+/target/
+/package-lock.json
+/yarn.lock
+
