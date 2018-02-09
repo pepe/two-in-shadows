@@ -12,9 +12,8 @@ In the terminal run in separate window/tabs/panes:
 
 1. npm dependencies `npm install`
 2. shadow-cljs helper server `shadow-cljs server start`
-3. shadow-cljs client build watcher `shadow-cljs watch client`
-4. shadow-cljs server build watcher `shadow-cljs watch server`
-5. Koa server `node out/server.js`
+3. shadow-cljs client and server build watcher `shadow-cljs watch client server`
+4. Koa server `node out/server.js`
 
 This is enough to get two http server running for your needs as developer.
 Server app runs on port 8270, client app server runs on port 8280.
