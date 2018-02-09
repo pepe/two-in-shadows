@@ -10,6 +10,7 @@
   []
   (let [app (Koa.)]
     (doto app
+      (.use routes/allowed-methods)
       (.use routes/all)
       (.use json)
       (.listen 8270))))

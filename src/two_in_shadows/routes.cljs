@@ -3,7 +3,8 @@
   (:require ["koa-router" :as Router]
             [two-in-shadows.utils :as utils]))
 
-(defn greeting
+
+(defn ^:private greeting
   "Renders document with greeting"
   [ctx next]
   (utils/set-body ctx {:message (utils/greeting "Two In Shadows Server")
@@ -11,17 +12,25 @@
   (next))
 
 
-(defn ping
+(defn ^:private ping
   "Returns pong document with pong message"
   [ctx next]
   (utils/set-body ctx {:message "pong"})
   (next))
 
-
-(def all
-  "Return all routes"
+(def ^:private router
+  "Application router"
   (let [router (Router.)]
     (doto router
       (.get "/ping" ping)
-      (.get "/greeting" greeting))
-    (.routes router)))
+      (.get "/greeting" greeting))))
+
+
+(def allowed-methods
+  "All allowed methods"
+  (.allowedMethods router))
+
+
+(def all
+  "All routes"
+    (.routes router))

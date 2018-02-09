@@ -4,7 +4,10 @@
 
  :dependencies [[binaryage/devtools "0.9.8"]
                 [binaryage/dirac "1.2.29"]
-                [rum "0.11.0"]]
+                [rum "0.11.0"]
+                [funcool/potok "2.3.0"]
+                [funcool/beicon "4.1.0"]
+                [funcool/rxhttp "1.0.0-SNAPSHOT"]]
 
 
  :builds {:server {:target    :node-script
