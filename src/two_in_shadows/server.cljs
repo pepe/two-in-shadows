@@ -1,15 +1,20 @@
 (ns two-in-shadows.server
   (:require ["koa" :as koa]
+            ["koa-route" :as route]
+            [goog.object :as object]
+            [goog.json :as json]
             [two-in-shadows.utils :as utils]))
 
 (defn headers [ctx next]
-  (set! (. ctx -headers) #js{:content-type "application/json"})
+  (object/set ctx "headers" #js{:content-type "application/json"})
   (next))
 
 (defn greeting
   "Renders document with greeting"
   [ctx next]
-  (set! (. ctx -body) (js/JSON.stringify #js {:message (utils/greeting "Two In Shadows Server")}))
+  (object/set ctx "body"
+              (json/serialize #js{:message (utils/greeting "Two In Shadows Server")
+                                  :date    (utils/current-date)}))
   (next))
 
 
@@ -17,6 +22,6 @@
   (let [app (koa.)]
       (doto app
         (.use headers)
-        (.use greeting)
+        (.use (route/get "/greeting" greeting))
         (.listen 8270))))
 

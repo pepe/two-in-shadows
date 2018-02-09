@@ -2,12 +2,17 @@
   (:require [rum.core :as rum]
             [two-in-shadows.utils :as utils]))
 
+(rum/defc calendar < rum/static []
+  [:section#calendar
+    [:header
+      [:h2 "Today is " (utils/current-date)]]])
 
-(rum/defc greeting []
+(rum/defc page []
   [:div
-   [:h1 (utils/greeting "Two In Shadows Client")]])
+   [:h1 (utils/greeting "Two In Shadows Client")]
+   (calendar)])
 
 (defn mount-root []
-  (rum/mount (greeting) (. js/document (getElementById "app"))))
+  (rum/mount (page) (. js/document (getElementById "app"))))
 
 (mount-root)
