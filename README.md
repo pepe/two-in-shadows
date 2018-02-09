@@ -8,12 +8,13 @@ rendering, the server app uses [koa][3] http server.
 
 Clone this repo and change dir to the created one.
 
-In the terminal run in separate window/tabs/panes:
+First run `npm install` to install npm dependencies. 
 
-1. npm dependencies `npm install`
-2. shadow-cljs helper server `shadow-cljs server start`
-3. shadow-cljs client and server build watcher `shadow-cljs watch client server`
-4. Koa server `node out/server.js`
+Then in the in separate window/tabs/panes run:
+
+1. shadow-cljs helper server `shadow-cljs server start`
+2. shadow-cljs client and server build watcher `shadow-cljs watch client server`
+3. Koa server `node out/server.js`
 
 This is enough to get two http server running for your needs as developer.
 Server app runs on port 8270, client app server runs on port 8280.
