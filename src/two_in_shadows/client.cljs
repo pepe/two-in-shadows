@@ -10,7 +10,7 @@
 (defn mount-root
   "Mounts page component"
   []
-  (rum/mount (components/Page store) (. js/document (getElementById "app"))))
+  (rum/mount (components/Page store) (. js/document (getElementById "container"))))
 
 (ptk/emit! store (events/->GetGreeting))
 

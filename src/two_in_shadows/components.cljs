@@ -7,24 +7,25 @@
 
 
 (rum/defc Greeting < rum/static [greeting]
-  [:div "Server says: " greeting])
+  [:section#greeting
+   [:div "Server says: " greeting]])
 
 
 (rum/defc Calendar < rum/static [date]
   [:section#calendar
-   [:header
-    [:h2 "Today is: " date]]])
+   [:div "Today is: " date]])
 
 
 (rum/defc Page < rum/reactive [store]
   (let [state (utils/get-state store)
         greeting (utils/react-cursor state :ui/greeting)]
     (js/console.log greeting)
-    [:div
-      [:h1 "Two In Shadows Client"]
-     (if greeting
-       [:div
-        (Greeting (:message greeting))
+    [:div#app
+     [:header
+      {:style {:margin "1rem 0"}}
+      [:h1 "Two In Shadows Client"]]
+     [:main
+      (if greeting
+       [(Greeting (:message greeting))
         (Calendar (:date greeting))]
-       (Loading))]))
-
+       (Loading))]]))
