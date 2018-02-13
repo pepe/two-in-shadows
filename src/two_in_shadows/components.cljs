@@ -1,5 +1,6 @@
 (ns two-in-shadows.components
   (:require [rum.core :as rum]
+            [two-in-shadows.material :as material]
             [two-in-shadows.utils :as utils]))
 
 (rum/defc Loading < rum/static []
@@ -19,13 +20,14 @@
 (rum/defc Page < rum/reactive [store]
   (let [state (utils/get-state store)
         greeting (utils/react-cursor state :ui/greeting)]
-    (js/console.log greeting)
     [:div#app
-     [:header
-      {:style {:margin "1rem 0"}}
-      [:h1 "Two In Shadows Client"]]
+     [material/fixed-toolbar
+      [material/toolbar-row
+       [material/toolbar-section-start
+        [material/toolbar-title "Two In Shadows Client"]]]]
      [:main
+      [material/adjust-fixed-toolbar]
       (if greeting
-       [(Greeting (:message greeting))
-        (Calendar (:date greeting))]
+        [(rum/with-key (Greeting (:message greeting)) :greeting)
+         (rum/with-key (Calendar (:date greeting)) :calendar)]
        (Loading))]]))
