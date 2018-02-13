@@ -9,7 +9,7 @@
   "author": "Josef Pospíšil",
   "license": "EPL",
   "devDependencies": {
-    "shadow-cljs": "^2.1.4"
+    "shadow-cljs": "^2.1.7"
   },
   "dependencies": {
     "create-react-class": "^15.6.3",
