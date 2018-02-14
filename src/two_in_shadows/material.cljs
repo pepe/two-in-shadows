@@ -2,7 +2,6 @@
   (:require [rum.core :as rum]
             ["@material/ripple" :as ripple]))
 
-
 (def fixed-toolbar :header.mdc-toolbar.mdc-toolbar--fixed)
 
 (def toolbar-row :div.mdc-toolbar__row)
@@ -24,7 +23,7 @@
 (def subheading :div.mdc-typography--subheading1)
 
 (def ^:private attach-ripple
-  {:did-mount (fn [state] (-> state rum/dom-node ripple.MDCRipple.attachTo) state)})
+  {:did-mount (fn [state] (-> state rum/dom-node ripple/MDCRipple.attachTo) state)})
 
 
 (rum/defc button < attach-ripple rum/static
