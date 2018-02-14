@@ -1,33 +1,48 @@
 (ns two-in-shadows.components
   (:require [rum.core :as rum]
             [two-in-shadows.material :as material]
-            [two-in-shadows.utils :as utils]))
+            [two-in-shadows.utils :as utils]
+            [two-in-shadows.events :as events]))
+
+(def card-style {:width "20rem" :padding "1rem" :margin "1rem"})
 
 (rum/defc Loading < rum/static []
   [:div "Loading"])
 
 
 (rum/defc Greeting < rum/static [greeting]
-  [:section#greeting
-   [:div "Server says: " greeting]])
+  [material/card
+   {:id "greeting" :style card-style}
+   [:div
+    {:style {:width "20rem"}}
+    [material/title "Two in Shadows say"]
+    [material/subheading greeting]]])
 
 
-(rum/defc Calendar < rum/static [date]
-  [:section#calendar
-   [:div "Today is: " date]])
+(rum/defc Calendar < rum/static [store date]
+  [material/card
+   {:id "calendar" :style card-style}
+   [:div
+    {:style {:width "20rem"}}
+    [material/title "Today is"]
+    [material/subheading date]
+    (material/button {:on-click #(events/get-greeting store)} "reload")]])
 
 
 (rum/defc Page < rum/reactive [store]
   (let [state (utils/get-state store)
-        greeting (utils/react-cursor state :ui/greeting)]
+        loading (utils/react-cursor state :ui/loading)
+        {:keys [message date] } (utils/react-cursor state :ui/greeting)]
     [:div#app
      [material/fixed-toolbar
       [material/toolbar-row
        [material/toolbar-section-start
-        [material/toolbar-title "Two In Shadows Client"]]]]
+        [material/toolbar-title "Two In Shadows Client"]]]
+      [material/toolbar-section-end]]
+     material/adjust-fixed-toolbar
      [:main
-      [material/adjust-fixed-toolbar]
-      (if greeting
-        [(rum/with-key (Greeting (:message greeting)) :greeting)
-         (rum/with-key (Calendar (:date greeting)) :calendar)]
-       (Loading))]]))
+      {:style {:display :flex}}
+      (if (and (not loading) message)
+        [(rum/with-key (Greeting message) :greeting)
+         (rum/with-key (Calendar store date) :calendar)]
+        (Loading))]]))

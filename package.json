@@ -9,14 +9,17 @@
   "author": "Josef Pospíšil",
   "license": "EPL",
   "devDependencies": {
-    "shadow-cljs": "^2.1.7"
+    "shadow-cljs": "^2.1.10"
   },
   "dependencies": {
+    "@koa/cors": "2",
+    "@material/ripple": "^0.30.0",
     "create-react-class": "^15.6.3",
     "koa": "^2.4.1",
+    "koa-conditional-get": "^2.0.0",
+    "koa-etag": "^3.0.0",
     "koa-json": "^2.0.2",
     "koa-router": "^7.4.0",
-    "material-components-web": "^0.30.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "rxjs": "^5.5.6"

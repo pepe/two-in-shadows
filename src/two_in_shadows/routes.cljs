@@ -7,7 +7,7 @@
 (defn ^:private greeting
   "Renders document with greeting"
   [ctx next]
-  (utils/set-body ctx {:message (utils/greeting "Two In Shadows Server")
+  (utils/set-body ctx {:message (utils/greeting "Welcome to Shadows")
                        :date    (utils/current-date)})
   (next))
 
