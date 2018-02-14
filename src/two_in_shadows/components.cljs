@@ -7,7 +7,15 @@
 (def card-style {:width "20rem" :padding "1rem" :margin "1rem"})
 
 (rum/defc Loading < rum/static []
-  [:div "Loading"])
+  [:div
+   {:style {:z-index 10
+            :position :absolute
+            :top "1rem"
+            :right "2rem"
+            :background :white
+            :padding "1rem"
+            :border-radius "0.5rem"}}
+   "Loading"])
 
 
 (rum/defc Greeting < rum/static [greeting]
@@ -34,6 +42,7 @@
         loading (utils/react-cursor state :ui/loading)
         {:keys [message date] } (utils/react-cursor state :ui/greeting)]
     [:div#app
+     (when loading (Loading))
      [material/fixed-toolbar
       [material/toolbar-row
        [material/toolbar-section-start
@@ -42,7 +51,7 @@
      material/adjust-fixed-toolbar
      [:main
       {:style {:display :flex}}
-      (if (and (not loading) message)
+      (if message
         [(rum/with-key (Greeting message) :greeting)
-         (rum/with-key (Calendar store date) :calendar)]
-        (Loading))]]))
+         (rum/with-key (Calendar store date) :calendar)])]]))
+        
