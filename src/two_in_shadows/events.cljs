@@ -27,5 +27,4 @@
   "Gets the greeting from server"
   [store]
   (ptk/emit! store (->GetGreeting)))
-  
 

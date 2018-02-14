@@ -17,6 +17,12 @@
   (.toLocaleDateString (js/Date.)))
 
 
+(defn current-time
+  "Returns current date string"
+  []
+  (.toLocaleTimeString (js/Date.)))
+
+
 (defn set-body
   "Sets body of the context to js document"
   [context document]

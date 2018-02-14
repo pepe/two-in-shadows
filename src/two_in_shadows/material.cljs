@@ -14,9 +14,9 @@
 
 (def adjust-fixed-toolbar [:div.mdc-toolbar-fixed-adjust])
 
-(def  card :div.mdc-card)
+(def card :div.mdc-card)
 
-(def  card-media :div.mdc-card__media)
+(def card-media :div.mdc-card__media)
 
 (def title :div.mdc-typography--title)
 
@@ -24,7 +24,6 @@
 
 (def ^:private attach-ripple
   {:did-mount (fn [state] (-> state rum/dom-node ripple/MDCRipple.attachTo) state)})
-
 
 (rum/defc button < attach-ripple rum/static
   [opts label]

@@ -12,6 +12,6 @@
   []
   (rum/mount (components/Page store) (. js/document (getElementById "container"))))
 
-(ptk/emit! store (events/->GetGreeting))
+(events/get-greeting store)
 
 (mount-root)
