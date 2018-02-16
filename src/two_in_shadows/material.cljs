@@ -22,10 +22,24 @@
 
 (def subheading :div.mdc-typography--subheading1)
 
+(def elevation-z2 :div.mdc-elevation--z2)
+
 (def ^:private attach-ripple
   {:did-mount (fn [state] (-> state rum/dom-node ripple/MDCRipple.attachTo) state)})
 
-(rum/defc button < attach-ripple rum/static
+
+(defn card-action-buttons
+  "Scaffold for card action buttons"
+  [& buttons]
+  [:div.mdc-card__actions
+   [:div.mdc-card__action-buttons buttons]])
+
+
+(rum/defc Button < attach-ripple rum/static
   [opts label]
   [:button.mdc-button opts label])
+
+(rum/defc CardButton < rum/static
+  [opts label]
+  (button (merge opts {:class "mdc-card__action mdc-card__action--button"}) label))
 

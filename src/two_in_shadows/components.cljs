@@ -4,25 +4,24 @@
             [two-in-shadows.utils :as utils]
             [two-in-shadows.events :as events]))
 
-(def card-style {:width "20rem" :padding "1rem" :margin "1rem"})
+(def card-style {:width "20rem" :margin "1rem"})
 
-(rum/defc Loading < rum/static []
-  [:div
-   {:style {:z-index 10
-            :position :absolute
-            :top "1rem"
-            :right "2rem"
-            :background :white
-            :padding "1rem"
-            :border-radius "0.5rem"}}
-   "Loading"])
+(def card-primary {:width "20rem" :padding "1rem"})
+
+(rum/defc Loading < rum/static [loading]
+  (when loading
+    [material/card
+     {:style {:position :absolute :z-index 10 :top "1.5rem" :right "2rem"
+              :padding "0.5rem 1rem"
+              :transition "opacity 750ms ease-in" :opacity (if (= :fade loading) 0.1 1)}}
+     [material/subheading "Loading"]]))
 
 
 (rum/defc Greeting < rum/static [greeting]
   [material/card
    {:id "greeting" :style card-style}
    [:div
-    {:style {:width "20rem"}}
+    {:style card-primary}
     [material/title "Two in Shadows say"]
     [material/subheading greeting]]])
 
@@ -30,11 +29,14 @@
 (rum/defc Calendar < rum/static [store date]
   [material/card
    {:id "calendar" :style card-style}
-   [:div
-    {:style {:width "20rem"}}
-    [material/title "Today is"]
-    [material/subheading date]
-    (material/button {:on-click #(events/get-greeting store)} "reload")]])
+   [[:div
+     {:style card-primary}
+     [material/title "Today is"]
+     [material/subheading date]]
+    (material/card-action-buttons
+     (material/CardButton
+      {:on-click #(events/get-greeting store)} "reload"))]])
+
 
 
 (rum/defc Page < rum/reactive [store]
@@ -42,7 +44,7 @@
         loading (utils/react-cursor state :ui/loading)
         {:keys [message date] } (utils/react-cursor state :ui/greeting)]
     [:div#app
-     (when loading (Loading))
+     (Loading loading)
      [material/fixed-toolbar
       [material/toolbar-row
        [material/toolbar-section-start
@@ -50,8 +52,6 @@
       [material/toolbar-section-end]]
      material/adjust-fixed-toolbar
      [:main
-      {:style {:display :flex}}
+      {:style {:display :flex :width "100%" :flex-wrap :wrap}}
       (if message
-        [(rum/with-key (Greeting message) :greeting)
-         (rum/with-key (Calendar store date) :calendar)])]]))
-        
+        [(Greeting message) (Calendar store date)])]]))
