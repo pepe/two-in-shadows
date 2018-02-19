@@ -14,8 +14,6 @@
 
 (def adjust-fixed-toolbar [:div.mdc-toolbar-fixed-adjust])
 
-(def card :div.mdc-card)
-
 (def card-media :div.mdc-card__media)
 
 (def title :div.mdc-typography--title)
@@ -27,19 +25,35 @@
 (def ^:private attach-ripple
   {:did-mount (fn [state] (-> state rum/dom-node ripple/MDCRipple.attachTo) state)})
 
+(def card-style {:width "30rem" :margin "1rem"})
+
+(def card-primary {:width "30rem" :padding "1rem"})
+
 
 (defn card-action-buttons
   "Scaffold for card action buttons"
   [& buttons]
   [:div.mdc-card__actions
-   [:div.mdc-card__action-buttons buttons]])
+   {:style {:display :flex :justify-content :flex-end}}
+   [:div.mdc-card__action-buttons
+    buttons]])
+
+
+(defn card
+  ([opts primary] (card opts primary nil))
+  ([opts primary actions]
+   [:div.mdc-card
+    (merge {:style card-style} opts)
+    [:div {:style card-primary} primary]
+    (when actions
+      (card-action-buttons actions))]))
 
 
 (rum/defc Button < attach-ripple rum/static
   [opts label]
   [:button.mdc-button opts label])
 
-(rum/defc CardButton < rum/static
-  [opts label]
-  (button (merge opts {:class "mdc-card__action mdc-card__action--button"}) label))
 
+(defn card-button
+  [opts label]
+  (Button (merge opts {:class "mdc-card__action mdc-card__action--button"}) label))
