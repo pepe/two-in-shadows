@@ -23,10 +23,28 @@
   (.toLocaleTimeString (js/Date.)))
 
 
-(defn set-body
+(defn set-raw-body
   "Sets body of the context to js document"
   [context document]
-  (object/set context "body" (clj->js document)))
+  (object/set context "body" document))
+
+
+
+(defn set-body
+  "Sets body of the context to cljs document"
+  [context document]
+  (set-raw-body context (clj->js document)))
+
+(defn get-body
+  "Returns request body from context"
+  [context]
+  (js->clj (object/getValueByKeys context #js["request" "body"])
+           :keywordize-keys true))
+
+(defn get-params
+  "Returns params from context"
+  [context]
+  (js->clj (object/get context "params") :keywordize-keys true))
 
 
 (defn get-state

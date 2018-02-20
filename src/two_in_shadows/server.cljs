@@ -5,7 +5,7 @@
             ["@koa/cors" :as cors]
             ["koa-conditional-get" :as conditional]
             ["koa-etag" :as etag]
-            [two-in-shadows.routes :as routes]))
+            [two-in-shadows.server.routes :as routes]))
 
 
 (defn main
