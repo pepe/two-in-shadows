@@ -1,4 +1,4 @@
-(ns two-in-shadows.events
+(ns two-in-shadows.client.events
   (:require [potok.core :as ptk]
             [beicon.core :as rx]
             [goog.json :as json]

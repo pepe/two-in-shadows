@@ -16,6 +16,7 @@
     "@material/ripple": "^0.30.0",
     "create-react-class": "^15.6.3",
     "koa": "^2.4.1",
+    "koa-body": "^2.5.0",
     "koa-conditional-get": "^2.0.0",
     "koa-etag": "^3.0.0",
     "koa-json": "^2.0.2",

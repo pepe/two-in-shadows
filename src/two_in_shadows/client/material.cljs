@@ -1,4 +1,4 @@
-(ns two-in-shadows.material
+(ns two-in-shadows.client.material
   (:require [rum.core :as rum]
             ["@material/ripple" :as ripple]))
 

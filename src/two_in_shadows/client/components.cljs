@@ -1,8 +1,8 @@
-(ns two-in-shadows.components
+(ns two-in-shadows.client.components
   (:require [rum.core :as rum]
-            [two-in-shadows.material :as material]
             [two-in-shadows.utils :as utils]
-            [two-in-shadows.events :as events]))
+            [two-in-shadows.client.material :as material]
+            [two-in-shadows.client.events :as events]))
 
 (def main-style {:style {:display :flex :width "100%" :flex-wrap :wrap}})
 
