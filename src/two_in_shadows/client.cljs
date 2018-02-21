@@ -4,14 +4,11 @@
             [two-in-shadows.client.events :as events]
             [two-in-shadows.client.components :as components]))
 
-(defonce store
-  (ptk/store {:state {:api/url "http://localhost:8270/"}}))
-
 (defn mount-root
   "Mounts page component"
   []
-  (rum/mount (components/Page store) (. js/document (getElementById "container"))))
-
-(events/get-greeting store)
+  (events/get-greeting events/store)
+  (events/get-clowns events/store)
+  (rum/mount (components/Page events/store) (. js/document (getElementById "container"))))
 
 (mount-root)

@@ -9,10 +9,7 @@
   (update [_ state] (dissoc state :state/dirty))
   ptk/EffectEvent
   (effect [_ state _]
-    (println "Saving" state)
-    (fs/store state)
-    (println "Saved")))
-
+    (fs/store state)))
 
 
 (defrecord Add [collection item]

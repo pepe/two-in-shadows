@@ -27,7 +27,7 @@
     (utils/set-body ctx (events/get-all store))
     (next)))
 
-(defn ^:private list
+(defn ^:private list-all
   "Returns list of items"
   [store]
   (fn [ctx next]
@@ -35,7 +35,7 @@
       (utils/set-body ctx (events/get-all store collection)))
     (next)))
 
-(defn ^:private add
+(defn ^:private add-one
   "Add item to store"
   [store]
   (fn [ctx next]
@@ -44,7 +44,7 @@
     (utils/set-body ctx {:message "added"}) (next)))
 
 
-(defn ^:private remove
+(defn ^:private remove-one
   "Remove item from store"
   [store]
   (fn [ctx next]
@@ -59,9 +59,9 @@
         store (events/init-store)]
     (doto router
       (.get "/collections" (list-colls store))
-      (.get "/storage/:collection" (list store))
-      (.delete "/storage/:collection" (body #js{:strict false}) (remove store))
-      (.post "/storage/:collection" (body) (add store))
+      (.get "/storage/:collection" (list-all store))
+      (.delete "/storage/:collection" (body #js{:strict false}) (remove-one store))
+      (.post "/storage/:collection" (body) (add-one store))
       (.get "/ping" ping)
       (.get "/greeting" greeting))))
 

@@ -7,6 +7,15 @@
 (def main-style {:style {:display :flex :width "100%" :flex-wrap :wrap}})
 
 
+(rum/defc Toolbar < rum/static []
+  [[material/fixed-toolbar
+    [material/toolbar-row
+     [material/toolbar-section-start
+      [material/toolbar-title "Two In Shadows Client"]]]
+    [material/toolbar-section-end]]
+   material/adjust-fixed-toolbar])
+
+
 (rum/defc Loading < rum/static [loading]
   (when loading
     (material/card
@@ -19,36 +28,88 @@
 (rum/defc Greeting < rum/static [greeting]
   (when greeting
     (material/card
-      {:id "greeting"}
-      [:div
-        [material/title "Two in Shadows say"]
-        [material/subheading greeting]])))
+     {:id "greeting"}
+     [:div
+      [material/title "Two in Shadows say"]
+      [material/subheading greeting]])))
 
 
 (rum/defc Calendar < rum/static [store date]
   (when date
     (material/card
-      {:id "calendar"}
-      [:div
-        [material/title "Today is"]
-        [material/subheading date]]
-      (material/card-button
-        {:on-click #(events/get-greeting store)} "reload"))))
+     {:id "calendar"}
+     [:div
+      [material/title "Today is"]
+      [material/subheading date]])))
+
+(rum/defc CancelButton < rum/static [store]
+  (material/Button
+   {:on-click (fn [e]
+                (.preventDefault e)
+                (.stopPropagation e)
+                (events/edit-clown store nil))
+    :class "secondary-text-button"}
+   "Cancel"))
+
+(rum/defc ClownForm < rum/static [store clown]
+  (let [{:keys [name age]} clown
+        submit-fn (fn [e]
+                    (.preventDefault e) (.stopPropagation e)
+                    (events/save-clown store
+                                       (let [data (js/FormData. (.-target e))]
+                                         {:name (.get data "name") :age (.get data "age")})))]
+    [:form
+     {:style {:width "28rem" :display "flex" :flex-direction "column"}
+      :on-submit submit-fn}
+     (material/text-field {:default-value name :name "name"} "Name")
+     (material/text-field {:default-value age :name "age"} "Age")
+     [:div
+      (CancelButton store)
+      (material/Button {} "Save")]]))
+
+(rum/defc ClownLine < rum/static
+  {:key-fn (fn [_ {:keys [name age]}] (str name age))}
+  [store {:keys [name age] :as clown}]
+  [:li {:style {:display "flex" :align-items "flex-end"
+                :justify-content "space-between"}}
+   [[:div age " yo - " name]
+    [:div
+     (material/Button {:on-click #(events/remove-clown store clown)} "Remove")
+     (material/Button {:on-click #(events/edit-clown store clown)} "Edit")]]])
+
+(rum/defc ClownList < rum/static
+  [store clowns]
+  [:ul {:style {:padding 0 :width "28rem"}}
+   (for [clown clowns] (ClownLine store clown))])
 
 
-(rum/defc Toolbar < rum/static []
-  [[material/fixed-toolbar
-    [material/toolbar-row
-     [material/toolbar-section-start
-      [material/toolbar-title "Two In Shadows Client"]]]
-    [material/toolbar-section-end]]
-   material/adjust-fixed-toolbar])
+(rum/defc AddClownButton < rum/static
+  [store]
+  (material/Button
+   {:on-click #(events/edit-clown store {:name "" :age ""})} "Add"))
 
+
+(rum/defc Clowns < rum/reactive [store]
+  (let [state        (utils/get-state store)
+        clowns       (utils/react-cursor state :data/clowns)
+        edited-clown (utils/react-cursor state :ui/edited-clown)]
+    (material/card
+     {:id "clowns"}
+     [:div
+      (if edited-clown
+        [[material/title "Editing clown"] (ClownForm store edited-clown)]
+        (if (seq clowns)
+          [[material/title "Known clowns"] (ClownList store clowns) (AddClownButton store)]
+          [[material/title "No known clowns"] (AddClownButton store)]))]
+     (material/Button {:on-click #(events/get-clowns store)} "Reload"))))
 
 (rum/defc Page < rum/reactive [store]
   (let [state (utils/get-state store)
         loading (utils/react-cursor state :ui/loading)
-        {:keys [message date] } (utils/react-cursor state :ui/greeting)]
+        {:keys [message date]} (utils/react-cursor state :ui/greeting)]
     [:div#app
      (Loading loading) (Toolbar)
-     [:main main-style [(Greeting message) (Calendar store date)]]]))
+     [:main main-style
+      [(Greeting message)
+       (Calendar store date)
+       (Clowns store)]]]))

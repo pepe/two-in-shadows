@@ -1,6 +1,7 @@
 (ns two-in-shadows.client.material
   (:require [rum.core :as rum]
-            ["@material/ripple" :as ripple]))
+            ["@material/ripple" :as ripple]
+            ["@material/textfield" :as text-field]))
 
 (def fixed-toolbar :header.mdc-toolbar.mdc-toolbar--fixed)
 
@@ -57,3 +58,21 @@
 (defn card-button
   [opts label]
   (Button (merge opts {:class "mdc-card__action mdc-card__action--button"}) label))
+
+
+(def attach-text-field
+  {:did-mount (fn [state]
+                (-> state rum/dom-node text-field/MDCTextField.attachTo)
+                state)})
+
+(rum/defc text-field < attach-text-field rum/static
+  [opts label]
+  (let [id    (str {:name opts} "-input")
+        value (:value opts)]
+    [:div.mdc-text-field
+     [:input.mdc-text-field__input (merge {:id id} opts)]
+     [:label.mdc-text-field__label
+      {:for   (:name opts)
+       :class (when (and value (not-empty value))
+                "mdc-text-field__label--float-above")}
+      label]]))
