@@ -9,12 +9,15 @@
   "author": "Josef Pospíšil",
   "license": "EPL",
   "devDependencies": {
-    "shadow-cljs": "^2.1.21"
+    "shadow-cljs": "^2.1.23"
   },
   "dependencies": {
     "@koa/cors": "2",
+    "@material/button": "^0.31.0",
+    "@material/card": "^0.31.0",
     "@material/ripple": "^0.30.0",
     "@material/textfield": "^0.30.0",
+    "@material/toolbar": "^0.30.0",
     "create-react-class": "^15.6.3",
     "koa": "^2.4.1",
     "koa-body": "^2.5.0",
