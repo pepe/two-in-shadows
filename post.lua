@@ -11,7 +11,7 @@ function init(args)
 end
 
 function request()
-  body = "{\"name\": \"" .. counter .. "clown\", \"age\": \"" .. counter .."\"}"
+  body = "{\"name\": \"" .. counter .. "clown\", \"age\": " .. counter .."}"
   counter = counter + 1
   return wrk.format(nil, nil, nil, body)
 end

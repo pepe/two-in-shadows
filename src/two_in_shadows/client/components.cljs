@@ -13,14 +13,14 @@
      [material/toolbar-section-start
       [material/toolbar-title "Two In Shadows Client"]]]
     [material/toolbar-section-end]]
-   material/adjust-fixed-toolbar])
+   [material/adjust-fixed-toolbar]])
 
 
 (rum/defc Loading < rum/static [loading]
   (when loading
     (material/card
-     {:style {:position :absolute :z-index 10 :top "1.5rem" :right "2rem"
-              :padding "0.5rem 1rem" :width "8rem"
+     {:style {:position :fixed :z-index 10 :top "1.5rem" :right "2rem"
+              :padding "0.25rem 0.5rem" :width "8rem"
               :transition "opacity 750ms ease-in" :opacity (if (= :fade loading) 0.1 1)}}
      [material/subheading "Loading"])))
 
@@ -69,13 +69,21 @@
 
 (rum/defc ClownLine < rum/static
   {:key-fn (fn [_ {:keys [name age]}] (str name age))}
-  [store {:keys [name age] :as clown}]
-  [:li {:style {:display "flex" :align-items "flex-end"
-                :justify-content "space-between"}}
-   [[:div age " yo - " name]
-    [:div
-     (material/Button {:on-click #(events/remove-clown store clown)} "Remove")
-     (material/Button {:on-click #(events/edit-clown store clown)} "Edit")]]])
+  [store {:keys [name age edited hovered] :as clown}]
+  (if edited
+    (ClownForm store clown)
+    [:li {:on-mouse-enter #(events/hover-clown store clown)
+          :on-mouse-leave #(events/un-hover-clown store clown)
+          :class (when hovered "mdc-elevation--z3")
+          :style {:display "flex" :align-items "center"
+                  :justify-content "space-between"
+                  :padding-left "0.5rem"
+                  :height "2rem"}}
+     [[:div age " yo - " name]
+      [:div
+       (when hovered
+         [(material/Button {:on-click #(when (js/confirm "Really?") (events/remove-clown store))} "Remove")
+          (material/Button {:on-click #(events/edit-clown store clown)} "Edit")])]]]))
 
 (rum/defc ClownList < rum/static
   [store clowns]
@@ -91,16 +99,14 @@
 
 (rum/defc Clowns < rum/reactive [store]
   (let [state        (utils/get-state store)
-        clowns       (utils/react-cursor state :data/clowns)
-        edited-clown (utils/react-cursor state :ui/edited-clown)]
+        clowns       (utils/react-cursor state :ui/clowns)]
     (material/card
      {:id "clowns"}
      [:div
-      (if edited-clown
-        [[material/title "Editing clown"] (ClownForm store edited-clown)]
-        (if (seq clowns)
-          [[material/title "Known clowns"] (ClownList store clowns) (AddClownButton store)]
-          [[material/title "No known clowns"] (AddClownButton store)]))]
+      (if (seq clowns)
+        [[material/title "Known clowns"] (ClownList store clowns)
+         (AddClownButton store)]
+        [[material/title "No known clowns"] (AddClownButton store)])]
      (material/Button {:on-click #(events/get-clowns store)} "Reload"))))
 
 (rum/defc Page < rum/reactive [store]

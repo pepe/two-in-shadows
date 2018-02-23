@@ -2,9 +2,9 @@
 {:source-paths ["src"]
 
 
- :dependencies [[binaryage/devtools       "0.9.8"]
+ :dependencies [[binaryage/dirac          "1.2.29"]
+                [binaryage/devtools       "0.9.8"]
                 [org.clojure/tools.reader "1.1.0"]
-                [binaryage/dirac          "1.2.29"]
                 [rum                      "0.11.0"]
                 [funcool/potok            "2.3.0"]
                 [funcool/beicon           "4.1.0"]

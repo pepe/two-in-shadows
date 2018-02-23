@@ -9,7 +9,7 @@
   "author": "Josef Pospíšil",
   "license": "EPL",
   "devDependencies": {
-    "shadow-cljs": "^2.1.23"
+    "shadow-cljs": "^2.1.24"
   },
   "dependencies": {
     "@koa/cors": "2",
