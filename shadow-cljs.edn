@@ -2,7 +2,7 @@
 {:source-paths ["src"]
 
 
- :dependencies [[binaryage/dirac          "1.2.29"]
+ :dependencies [[binaryage/dirac          "1.2.30"]
                 [binaryage/devtools       "0.9.8"]
                 [org.clojure/tools.reader "1.1.0"]
                 [rum                      "0.11.0"]

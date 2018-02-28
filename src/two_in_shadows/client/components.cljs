@@ -42,12 +42,13 @@
       [material/title "Today is"]
       [material/subheading date]])))
 
+
 (rum/defc CancelButton < rum/static [store]
   (material/Button
    {:on-click (fn [e]
                 (.preventDefault e)
                 (.stopPropagation e)
-                (events/edit-clown store nil))
+                (events/cancel-edit-clown store))
     :class "secondary-text-button"}
    "Cancel"))
 
@@ -57,57 +58,67 @@
                     (.preventDefault e) (.stopPropagation e)
                     (events/save-clown store
                                        (let [data (js/FormData. (.-target e))]
-                                         {:name (.get data "name") :age (.get data "age")})))]
+                                         {:name (.get data "name") :age (int (.get data "age"))})))]
     [:form
      {:style {:width "28rem" :display "flex" :flex-direction "column"}
       :on-submit submit-fn}
-     (material/text-field {:default-value name :name "name"} "Name")
-     (material/text-field {:default-value age :name "age"} "Age")
+     (material/TextField {:required true :default-value name :name "name"} "Name")
+     (material/TextField {:required true :default-value age :name "age"} "Age")
      [:div
-      (CancelButton store)
-      (material/Button {} "Save")]]))
+      (material/Button {} "Save")
+      (CancelButton store)]]))
+
+
+(def clown-line-style {:display "flex" :align-items "center"
+                       :justify-content "space-between"
+                       :padding-left "1rem"
+                       :height "2rem"})
 
 (rum/defc ClownLine < rum/static
   {:key-fn (fn [_ {:keys [name age]}] (str name age))}
-  [store {:keys [name age edited hovered] :as clown}]
+  [store {:keys [name age edited hovered] :as clown} edited-clown]
   (if edited
     (ClownForm store clown)
-    [:li {:on-mouse-enter #(events/hover-clown store clown)
-          :on-mouse-leave #(events/un-hover-clown store clown)
+    [:li {:on-mouse-enter #(when-not edited-clown (events/hover-clown store clown))
+          :on-mouse-leave #(when-not edited-clown (events/un-hover-clown store))
           :class (when hovered "mdc-elevation--z3")
-          :style {:display "flex" :align-items "center"
-                  :justify-content "space-between"
-                  :padding-left "0.5rem"
-                  :height "2rem"}}
+          :style (cond-> clown-line-style
+                   hovered
+                   (merge {:font-weight 500})
+                   edited-clown (merge {:opacity 0.8}))}
      [[:div age " yo - " name]
       [:div
        (when hovered
          [(material/Button {:on-click #(when (js/confirm "Really?") (events/remove-clown store))} "Remove")
-          (material/Button {:on-click #(events/edit-clown store clown)} "Edit")])]]]))
+          (material/Button {:on-click #(events/edit-clown store)} "Edit")])]]]))
 
 (rum/defc ClownList < rum/static
-  [store clowns]
+  [store clowns edited-clown]
   [:ul {:style {:padding 0 :width "28rem"}}
-   (for [clown clowns] (ClownLine store clown))])
+   (for [clown clowns] (ClownLine store clown edited-clown))])
 
 
 (rum/defc AddClownButton < rum/static
   [store]
   (material/Button
-   {:on-click #(events/edit-clown store {:name "" :age ""})} "Add"))
+   {:on-click #(do
+                 (events/hover-clown store {:name "" :age ""})
+                 (events/edit-clown store))}
+   "Add"))
 
 
 (rum/defc Clowns < rum/reactive [store]
-  (let [state        (utils/get-state store)
-        clowns       (utils/react-cursor state :ui/clowns)]
+  (let [state         (utils/get-state store)
+        clowns        (utils/react-cursor state :ui/clowns)
+        edited-clown (utils/react-cursor state :ui/edited-clown)]
     (material/card
      {:id "clowns"}
      [:div
       (if (seq clowns)
-        [[material/title "Known clowns"] (ClownList store clowns)
-         (AddClownButton store)]
+        [[material/title "Known clowns"] (ClownList store clowns edited-clown)
+         (when-not edited-clown (AddClownButton store))]
         [[material/title "No known clowns"] (AddClownButton store)])]
-     (material/Button {:on-click #(events/get-clowns store)} "Reload"))))
+     (when-not edited-clown (material/Button {:on-click #(events/get-clowns store)} "Reload")))))
 
 (rum/defc Page < rum/reactive [store]
   (let [state (utils/get-state store)

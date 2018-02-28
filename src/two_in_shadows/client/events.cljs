@@ -8,12 +8,12 @@
 
 (defrecord FadeLoading []
   ptk/UpdateEvent
-  (update [_ state] (assoc state :ui/loading :fade)))
+  (update [_ state] (S/setval :ui/loading :fade state)))
 
 
 (defrecord HideLoading []
   ptk/UpdateEvent
-  (update [_ state] (assoc state :ui/loading false)))
+  (update [_ state] (S/setval :ui/loading S/NONE state)))
 
 
 (def fading
@@ -24,7 +24,7 @@
 
 (defrecord ShowLoading []
   ptk/UpdateEvent
-  (update [_ state] (assoc state :ui/loading true)))
+  (update [_ state] (S/setval :ui/loading true state)))
 
 
 (defrecord SaveGreeting [response]
@@ -32,7 +32,7 @@
   (update [_ state]
     (let [{body :body} response
           greeting (js->clj (json/parse body) :keywordize-keys true)]
-      (assoc state :ui/greeting greeting)))
+      (S/setval :ui/greeting greeting state)))
   ptk/WatchEvent
   (watch [_ state _] fading))
 
@@ -57,10 +57,11 @@
   ptk/UpdateEvent
   (update [_ state]
     (let [{body :body} response
-          clowns (js->clj (json/parse body) :keywordize-keys true)]
-      (-> state
-          (assoc :ui/clowns (take  (sort-by :age < clowns)))
-          (assoc :data/clowns (set (sort :name clowns))))))
+          clowns (js->clj (json/parse body) :keywordize-keys true)
+          ui-clowns (take 30 (sort-by :age < clowns))]
+      (->> state
+          (S/setval :ui/clowns ui-clowns)
+          (S/setval :data/clowns clowns))))
   ptk/WatchEvent
   (watch [_ _ _] fading))
 
@@ -81,32 +82,46 @@
   (ptk/emit! store (->GetClowns)))
 
 
-(defrecord EditClown [clown]
+(defrecord EditClown []
   ptk/UpdateEvent
   (update [_ state]
-    (let []
-      (cond->> (S/setval :ui/edited-clown clown state)
-        clown
-        (S/setval [:ui/clowns S/ALL (S/pred= clown) :edited] true)
-        (nil? clown)
-        (S/setval [:ui/clowns S/ALL :edited true?] false)))))
+    (let [clown (:ui/hovered-clown state)]
+      (->> state
+           (S/setval :ui/edited-clown clown)
+           (S/setval [:ui/clowns S/ALL (S/selected? (S/must :hovered)) :edited] true)))))
 
 
 (defn edit-clown
   "Sets clown for editing"
-  [store clown]
-  (ptk/emit! store (->EditClown clown)))
+  [store]
+  (ptk/emit! store (->EditClown)))
+
+
+(defrecord CancelEditClown []
+  ptk/UpdateEvent
+  (update [_ state]
+    (->> state
+         (S/setval [:ui/edited-clown] S/NONE)
+         (S/setval [:ui/clowns S/ALL (S/must :edited)] S/NONE))))
+
+
+(defn cancel-edit-clown
+  "Cancels the clown editing"
+  [store]
+  (ptk/emit! store (->CancelEditClown)))
+
+
 
 (defrecord RemoveClown []
   ptk/WatchEvent
   (watch [_ state _]
-      (let [clown (:ui/hovered-clown state)]
-       (rx/map ->GetClowns
-               (http/send!
-                {:method  :delete
-                 :url     (str (:api/url state) "storage/clowns")
-                 :headers {:content-type "application/json"}
-                 :body (js/JSON.stringify (clj->js clown))})))))
+    (let [clown (:ui/hovered-clown state)]
+      (rx/map ->GetClowns
+              (http/send!
+               {:method  :delete
+                :url     (str (:api/url state) "storage/clowns")
+                :headers {:content-type "application/json"}
+                :body (js/JSON.stringify (clj->js clown))})))))
 
 
 (defn remove-clown
@@ -117,14 +132,12 @@
 
 (defrecord SaveClown [clown]
   ptk/UpdateEvent
-  (update [_ state]
-    (let [old-clown (:ui/hovered-clown state)]
-      (S/setval [:ui/clowns S/ALL (S/pred= old-clown) :edited] clown state)))
+  (update [_ state] (S/setval :ui/edited-clown S/NONE state))
   ptk/WatchEvent
   (watch [_ state _]
-    (let [old-clown (:ui/edited-clown state)]
+    (let [old-clown (:ui/hovered-clown state)]
       (if (= old-clown clown)
-        (rx/just (->EditClown nil))
+        (rx/just (->CancelEditClown))
         (rx/map #(->RemoveClown)
                 (http/send!
                  {:method  :post
@@ -151,19 +164,18 @@
   [store clown]
   (ptk/emit! store (->HoverClown clown)))
 
-(defrecord UnHoverClown [clown]
+(defrecord UnHoverClown []
   ptk/UpdateEvent
   (update [_ state]
     (->>  state
           (S/setval :ui/hovered-clown nil)
-          (S/setval [:ui/clowns S/ALL (S/pred= clown) :hovered] false))))
+          (S/setval [:ui/clowns S/ALL :hovered] S/NONE))))
 
 
 (defn un-hover-clown
   "Sets clown as hovered"
-  [store clown]
-  (js/console.log "hohoho")
-  (ptk/emit! store (->UnHoverClown clown)))
+  [store]
+  (ptk/emit! store (->UnHoverClown)))
 
 
 

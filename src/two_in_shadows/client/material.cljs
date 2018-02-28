@@ -65,7 +65,7 @@
                 (-> state rum/dom-node text-field/MDCTextField.attachTo)
                 state)})
 
-(rum/defc text-field < attach-text-field rum/static
+(rum/defc TextField < attach-text-field rum/static
   [opts label]
   (let [id    (str {:name opts} "-input")
         value (:value opts)]
