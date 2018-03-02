@@ -58,10 +58,10 @@
   (update [_ state]
     (let [{body :body} response
           clowns (js->clj (json/parse body) :keywordize-keys true)
-          ui-clowns (take 30 (sort-by :age < clowns))]
+          ui-clowns (take 10 (sort-by :age < clowns))]
       (->> state
-          (S/setval :ui/clowns ui-clowns)
-          (S/setval :data/clowns clowns))))
+           (S/setval :ui/clowns ui-clowns)
+           (S/setval :data/clowns clowns))))
   ptk/WatchEvent
   (watch [_ _ _] fading))
 
@@ -109,6 +109,19 @@
   "Cancels the clown editing"
   [store]
   (ptk/emit! store (->CancelEditClown)))
+
+(defrecord AddClown []
+  ptk/UpdateEvent
+  (update [_ state]
+    (let [clown {:name "" :age 0}]
+      (->> state
+           (S/setval :ui/hovered-clown clown)
+           (S/setval :ui/edited-clown clown)
+           (S/setval [:ui/clowns S/AFTER-ELEM] (S/setval :edited true clown))))))
+
+
+(defn add-clown [store]
+  (ptk/emit! store (->AddClown)))
 
 
 

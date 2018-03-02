@@ -72,7 +72,7 @@
 (def clown-line-style {:display "flex" :align-items "center"
                        :justify-content "space-between"
                        :padding-left "1rem"
-                       :height "2rem"})
+                       :height "3rem"})
 
 (rum/defc ClownLine < rum/static
   {:key-fn (fn [_ {:keys [name age]}] (str name age))}
@@ -101,9 +101,7 @@
 (rum/defc AddClownButton < rum/static
   [store]
   (material/Button
-   {:on-click #(do
-                 (events/hover-clown store {:name "" :age ""})
-                 (events/edit-clown store))}
+   {:on-click #(events/add-clown store)}
    "Add"))
 
 
