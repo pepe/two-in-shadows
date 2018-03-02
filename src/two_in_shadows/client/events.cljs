@@ -110,6 +110,7 @@
   [store]
   (ptk/emit! store (->CancelEditClown)))
 
+
 (defrecord AddClown []
   ptk/UpdateEvent
   (update [_ state]
@@ -122,7 +123,6 @@
 
 (defn add-clown [store]
   (ptk/emit! store (->AddClown)))
-
 
 
 (defrecord RemoveClown []
