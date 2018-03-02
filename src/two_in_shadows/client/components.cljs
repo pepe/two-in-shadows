@@ -101,9 +101,7 @@
 (rum/defc AddClownButton < rum/static
   [store]
   (material/Button
-   {:on-click #(do
-                 (events/hover-clown store {:name "" :age ""})
-                 (events/edit-clown store))}
+   {:on-click #(events/add-clown store)}
    "Add"))
 
 
