@@ -29,7 +29,6 @@
   (object/set context "body" document))
 
 
-
 (defn set-body
   "Sets body of the context to cljs document"
   [context document]

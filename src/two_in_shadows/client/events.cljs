@@ -58,7 +58,7 @@
   (update [_ state]
     (let [{body :body} response
           clowns (js->clj (json/parse body) :keywordize-keys true)
-          ui-clowns (take 30 (sort-by :age < clowns))]
+          ui-clowns (take 10 (sort-by :age < clowns))]
       (->> state
           (S/setval :ui/clowns ui-clowns)
           (S/setval :data/clowns clowns))))
