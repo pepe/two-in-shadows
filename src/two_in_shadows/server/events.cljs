@@ -1,15 +1,15 @@
 (ns two-in-shadows.server.events
   (:require [potok.core :as ptk]
             [beicon.core :as rx]
-            [two-in-shadows.server.file-storage :as fs]))
+            [two-in-shadows.server.level-storage :as level]))
 
 
 (defrecord Sync []
   ptk/UpdateEvent
   (update [_ state] (dissoc state :state/dirty))
-  ptk/EffectEvent
-  (effect [_ state _]
-    (fs/store state)))
+  ptk/WatchEvent
+  (watch [_ state _]
+    (level/store state)))
 
 
 (defrecord Add [collection item]
@@ -41,7 +41,7 @@
 (defrecord Init []
   ptk/UpdateEvent
   (update [_ state]
-    (fs/retrieve)))
+    (level/retrieve)))
 
 
 (defn add-one
