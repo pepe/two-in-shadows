@@ -6,10 +6,11 @@
 
 (defrecord Sync []
   ptk/UpdateEvent
-  (update [_ state] (dissoc state :state/dirty))
+  (update [_ state]
+    (dissoc state :state/dirty))
   ptk/WatchEvent
   (watch [_ state _]
-    (level/store state)))
+    (level/store state (:state/id state))))
 
 
 (defrecord Add [collection item]
@@ -41,7 +42,7 @@
 (defrecord Init []
   ptk/UpdateEvent
   (update [_ state]
-    (level/retrieve)))
+    (level/retrieve (:state/id state))))
 
 
 (defn add-one
@@ -65,6 +66,6 @@
 (defn init-store
   "Initializes store and returns it"
   []
-  (let [store (ptk/store {:state nil})]
+  (let [store (ptk/store {:state #:state {:id "161e8c433ed"}})]
     (ptk/emit! store (->Init))
     store))

@@ -5,12 +5,6 @@
             [beicon.core :as rx]))
 
 
-(defn greeting
-  "Returns greeting"
-  [name]
-  (str "Hi, I am " name "!"))
-
-
 (defn current-date
   "Returns current date string"
   []
