@@ -2,17 +2,16 @@
   (:require ["level" :as level]
             [clojure.tools.reader.edn :as edn]))
 
-(def db (level (str (.-PWD js/process.env) "/data/storage.db")))
+(def db (level (str (.-PWD js/process.env) "/data/states.db")))
 
 (defn store
   "Stores state to level"
-  [state]
-  (.put db "state" (str state)))
+  [state key]
+  (.put db key (str state)))
 
 (defn retrieve
   "Retrieves stored state"
-  []
-  (.get db "state"
+  [key]
+  (.get db key
         (fn [err val]
-          (println err val)
           (if err {} (edn/read-string val)))))
