@@ -9,7 +9,7 @@
   "author": "Josef Pospíšil",
   "license": "EPL",
   "devDependencies": {
-    "shadow-cljs": "^2.2.2"
+    "shadow-cljs": "^2.2.4"
   },
   "dependencies": {
     "@koa/cors": "2",
@@ -26,6 +26,7 @@
     "koa-json": "^2.0.2",
     "koa-router": "^7.4.0",
     "level": "^3.0.0",
+    "npm": "^5.7.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "rxjs": "^5.5.6"
