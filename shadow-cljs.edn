@@ -2,9 +2,8 @@
 {:source-paths ["src"]
 
 
- :dependencies [[binaryage/dirac          "1.2.30"]
-                [binaryage/devtools       "0.9.8"]
-                [org.clojure/tools.reader "1.1.0"]
+ :dependencies [[binaryage/devtools       "0.9.10"]
+                [org.clojure/tools.reader "1.3.0"]
                 [rum                      "0.11.0"]
                 [com.rpl/specter          "1.1.0"]
                 [funcool/potok            "2.3.0"]
@@ -15,12 +14,10 @@
  :builds {:server {:target    :node-script
                    :main      two-in-shadows.server/main
                    :output-to "out/server.js"}
-
           :client {:target     :browser
                    :modules    {:main {:entries [two-in-shadows.client]}}
                    :output-dir "public/js"
                    :asset-path "/js"
                    :devtools   {:http-root  "public"
                                 :http-port  8280
-                                :after-load two-in-shadows.client/mount-root
-                                :preloads   [dirac.runtime.preload devtools.preload]}}}}
+                                :after-load two-in-shadows.client/mount-root}}}}

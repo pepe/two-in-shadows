@@ -2,7 +2,5 @@
 /out/
 /public/js/
 /target/
-/package-lock.json
-/yarn.lock
 .DS_Store
 /.shadow-cljs
