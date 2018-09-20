@@ -57,7 +57,7 @@
 
 (defn card-button
   [opts label]
-  (Button (merge opts {:class "mdc-card__action mdc-card__action--button"}) label))
+  (Button (assoc opts :class "mdc-card__action mdc-card__action--button") label))
 
 
 (def attach-text-field
@@ -67,12 +67,9 @@
 
 (rum/defc TextField < attach-text-field rum/static
   [opts label]
-  (let [id    (str {:name opts} "-input")
+  (let [id    (str (:name opts) "-input")
         value (:value opts)]
     [:div.mdc-text-field
      [:input.mdc-text-field__input (merge {:id id} opts)]
-     [:label.mdc-text-field__label
-      {:for   (:name opts)
-       :class (when (and value (not-empty value))
-                "mdc-text-field__label--float-above")}
-      label]]))
+     [:label.mdc-floating-label {:for (:name opts)} label]
+     [:div.mdc-line-ripple]]))

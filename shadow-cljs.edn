@@ -19,5 +19,4 @@
                    :output-dir "public/js"
                    :asset-path "/js"
                    :devtools   {:http-root  "public"
-                                :http-port  8280
-                                :after-load two-in-shadows.client/mount-root}}}}
+                                :http-port  8280}}}}
