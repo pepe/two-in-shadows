@@ -5,7 +5,7 @@
  :dependencies [[binaryage/devtools       "0.9.10"]
                 [org.clojure/tools.reader "1.3.0"]
                 [rum                      "0.11.0"]
-                [com.rpl/specter          "1.1.0"]
+                [com.rpl/specter          "1.1.2"]
                 [funcool/potok            "2.3.0"]
                 [funcool/beicon           "4.1.0"]
                 [funcool/rxhttp           "1.0.0-SNAPSHOT"]]
